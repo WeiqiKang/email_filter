@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="module" src="./bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="./bootstrap.min.css">
+<script src="https://cdn.acwing.com/static/jquery/js/jquery-3.3.1.min.js"></script>
+<title>垃圾邮件过滤系统</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f7f7f7;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        background-color: #fff;
+        width: 50%;
+        margin: auto;
+        padding: 2rem;
+        box-sizing: border-box;
+        height: 550px;
+    }
+    .header {
+        color: #fff;
+        background-color: #007bff;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 5px 5px 0 0;
+    }
+    .header h1 {
+        margin: 0;
+    }
+    .content {
+        padding: 2rem;
+        border: 1px solid #ddd;
+        margin: 1.5rem 0;
+        height: 300px; /* Adjust as needed */
+        background-color: #f9f9f9;
+        border-radius: 5px;
+    }
+    .footer {
+        display: flex;
+        justify-content: space-between;
+    }
+    button {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border: none;
+        background-color: #28a745;
+        color: #fff;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #218838;
+    }
+    .input-group-text {
+        height: 250px;
+    }
+    .result-outer {
+        margin-left: 30%;
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>垃圾邮件过滤系统</h1>
+    </div>
+    <div class="content">
+        <div class="input-group">
+            <span class="input-group-text">邮件内容</span>
+            <textarea class="form-control input-group-text-content" aria-label="With textarea"></textarea>
+          </div>
+    </div>
+    <div class="footer">
+
+        <button type="button">从文件读入邮件</button>
+        
+        <button type="button" class="submit">开始测试</button>
+        
+    </div>
+    <div class="result-outer"><span>检测结果：</span><span class="result">是垃圾邮件！</span></div>
+</div>
+<script>
+    $('.submit').on('click', function(e) {
+        let content = $('.input-group-text-content').val();
+        $.ajax({
+            url: "http://localhost:8000/api/submit/",
+            type: "GET",
+            data: {
+                content: content,
+            },
+            success(resp) {
+                res = resp.result;
+                console.log(res);
+                if(parseInt(res) === 1) {
+                    $(".result").html("是垃圾邮件！");
+                    $('.result-outer').show();
+                    $(".result").css("color", "red");
+                } else if(parseInt(res) === 0) {
+                    $(".result").html("不是垃圾邮件！");
+                    $('.result-outer').show();
+                    $(".result").css("color", "black");
+                }
+            }
+        })
+    });
+</script>
+</body>
+</html>
